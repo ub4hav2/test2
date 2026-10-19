@@ -5,511 +5,571 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NexusOS · Enterprise Network Platform</title>
 <style>
-:root {
-  --bg: #0b0f14; --bg-elevated: #121820; --bg-card: #161e28; --bg-hover: #1c2633;
-  --border: #2a3648; --border-subtle: #1e2836; --text: #e8eef5; --text-secondary: #8b9cb3;
-  --text-muted: #5c6f87; --accent: #3b82f6; --accent-hover: #2563eb; --accent-soft: rgba(59,130,246,.15);
-  --cyan: #22d3ee; --green: #10b981; --green-soft: rgba(16,185,129,.12); --amber: #f59e0b;
-  --amber-soft: rgba(245,158,11,.12); --red: #ef4444; --red-soft: rgba(239,68,68,.12); --purple: #a78bfa;
-  --radius: 12px; --radius-sm: 8px; --shadow: 0 8px 32px rgba(0,0,0,.4);
-  --font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; --mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+:root{
+  --bg:#0b0f14;--bg-elevated:#121820;--bg-card:#161e28;--bg-hover:#1c2633;--border:#2a3648;--border-subtle:#1e2836;
+  --text:#e8eef5;--text-secondary:#8b9cb3;--text-muted:#5c6f87;--accent:#3b82f6;--accent-hover:#2563eb;--accent-soft:rgba(59,130,246,.15);
+  --cyan:#22d3ee;--green:#10b981;--green-soft:rgba(16,185,129,.12);--amber:#f59e0b;--amber-soft:rgba(245,158,11,.12);
+  --red:#ef4444;--red-soft:rgba(239,68,68,.12);--purple:#a78bfa;--radius:12px;--radius-sm:8px;
+  --font:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;--mono:ui-monospace,'Cascadia Code',Consolas,monospace;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; }
-body { display: flex; overflow: hidden; }
-.sidebar { width: 260px; flex-shrink: 0; background: var(--bg-elevated); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; height: 100vh; }
-.logo { padding: 24px 22px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-subtle); }
-.logo-mark { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), #06b6d4); display: grid; place-items: center; font-weight: 700; font-size: 19px; color: #fff; }
-.logo-text { font-weight: 700; font-size: 18px; letter-spacing: -0.4px; }
-.logo-text span { color: var(--text-secondary); font-weight: 500; font-size: 12px; display: block; margin-top: -2px; }
-.nav { padding: 18px 14px; flex: 1; overflow-y: auto; }
-.nav-section { font-size: 11px; text-transform: uppercase; letter-spacing: .9px; color: var(--text-muted); padding: 16px 12px 6px; font-weight: 600; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: var(--text-secondary); cursor: pointer; transition: .15s; margin-bottom: 2px; font-weight: 500; }
-.nav-item:hover { background: var(--bg-hover); color: var(--text); }
-.nav-item.active { background: var(--accent-soft); color: #60a5fa; }
-.nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
-.sidebar-footer { padding: 18px 20px; border-top: 1px solid var(--border-subtle); font-size: 12px; color: var(--text-muted); }
-.main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-.topbar { height: 64px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; background: var(--bg-elevated); flex-shrink: 0; }
-.page-title { font-size: 17px; font-weight: 600; }
-.topbar-right { display: flex; align-items: center; gap: 14px; }
-.icon-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); display: grid; place-items: center; cursor: pointer; position: relative; }
-.icon-btn:hover { background: var(--bg-hover); color: var(--text); }
-.user { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; }
-.avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: grid; place-items: center; font-size: 12px; font-weight: 700; }
-.content { flex: 1; overflow-y: auto; padding: 28px 32px 48px; }
-.view { display: none; }
-.view.active { display: block; animation: fade .25s ease; }
-@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.grid { display: grid; gap: 18px; }
-.grid-4 { grid-template-columns: repeat(4, 1fr); }
-.grid-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-2 { grid-template-columns: 1fr 1fr; }
-.card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius); padding: 20px 22px; }
-.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.card-title { font-weight: 600; font-size: 15px; }
-.kpi { display: flex; flex-direction: column; gap: 6px; }
-.kpi-value { font-size: 30px; font-weight: 700; letter-spacing: -0.6px; }
-.kpi-label { font-size: 12.5px; color: var(--text-secondary); }
-.kpi-delta { font-size: 12px; font-weight: 500; margin-top: 4px; }
-.kpi-delta.up { color: var(--green); } .kpi-delta.down { color: var(--red); } .kpi-delta.neutral { color: var(--text-muted); }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-th { text-align: left; color: var(--text-muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: .6px; padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); }
-td { padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(255,255,255,.025); }
-.mono { font-family: var(--mono); font-size: 12.5px; }
-.status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; padding: 4px 9px; border-radius: 20px; }
-.status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
-.status.online { background: var(--green-soft); color: var(--green); } .status.online::before { background: var(--green); }
-.status.offline { background: var(--red-soft); color: var(--red); } .status.offline::before { background: var(--red); }
-.status.warning { background: var(--amber-soft); color: var(--amber); } .status.warning::before { background: var(--amber); }
-.status.open { background: var(--green-soft); color: var(--green); } .status.open::before { background: var(--green); }
-.status.closed { background: var(--red-soft); color: var(--red); } .status.closed::before { background: var(--red); }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 8px; font-weight: 500; font-size: 13.5px; border: none; cursor: pointer; transition: .15s; }
-.btn-primary { background: var(--accent); color: #fff; } .btn-primary:hover { background: var(--accent-hover); }
-.btn-primary:disabled { opacity:.5; cursor:default; }
-.btn-secondary { background: var(--bg-hover); color: var(--text); border: 1px solid var(--border); } .btn-secondary:hover { background: #243044; }
-.btn-sm { padding: 6px 11px; font-size: 12px; }
-.input, .select { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 9px 13px; color: var(--text); font-size: 13.5px; outline: none; width: 100%; }
-.input:focus, .select:focus { border-color: var(--accent); }
-.form-row { display: flex; gap: 14px; align-items: flex-end; margin-bottom: 18px; flex-wrap: wrap; }
-.form-group { flex: 1; min-width: 160px; }
-.form-group label { display: block; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 7px; font-weight: 500; }
-.progress { height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; margin-top: 10px; }
-.progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--cyan)); width: 0; transition: width .2s; }
-.tag { font-size: 11px; padding: 2px 7px; border-radius: 5px; background: var(--bg-hover); color: var(--text-secondary); font-weight: 500; }
-.map-container { background: #0d1218; border: 1px solid var(--border-subtle); border-radius: var(--radius); height: 540px; position: relative; overflow: auto; margin-top: 18px; }
-.map-svg { width: 100%; height: 100%; min-height: 520px; }
-.device-node { cursor: pointer; transition: transform .15s; }
-.device-node:hover { transform: scale(1.08); }
-.device-node circle { stroke-width: 2.5; }
-.device-node text { font-size: 11px; fill: #e8eef5; font-weight: 500; pointer-events: none; }
-.link-line { stroke: #3a4a5e; stroke-width: 2; fill: none; }
-.link-line.active { stroke: #22d3ee; stroke-width: 1.8; opacity:.6; }
-.detail-panel { position: fixed; top: 0; right: 0; width: 420px; height: 100vh; background: var(--bg-elevated); border-left: 1px solid var(--border-subtle); box-shadow: -8px 0 32px rgba(0,0,0,.5); z-index: 100; transform: translateX(100%); transition: transform .3s ease; overflow-y: auto; }
-.detail-panel.open { transform: translateX(0); }
-.detail-header { padding: 22px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
-.detail-close { background: none; border: none; color: var(--text-secondary); font-size: 22px; cursor: pointer; }
-.detail-body { padding: 22px 24px; }
-.detail-section { margin-bottom: 22px; }
-.detail-section h4 { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px; font-weight: 600; }
-.port-list { display: flex; flex-direction: column; gap: 8px; }
-.port-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border-subtle); }
-.port-item .port-num { font-family: var(--mono); font-weight: 500; }
-.toggle { position: relative; width: 42px; height: 24px; background: var(--border); border-radius: 12px; cursor: pointer; transition: .2s; flex-shrink:0; }
-.toggle.on { background: var(--accent); }
-.toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #fff; border-radius: 50%; transition: .2s; }
-.toggle.on::after { left: 20px; }
-.setting-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border-subtle); gap:16px; }
-.setting-row:last-child { border-bottom: none; }
-.banner { background: var(--amber-soft); border: 1px solid rgba(245,158,11,.25); color: #fcd34d; font-size: 12.5px; padding: 10px 14px; border-radius: 8px; margin-bottom: 18px; display:none; }
-.empty { color: var(--text-muted); text-align:center; padding: 30px; font-size:13px; }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5}
+body{display:flex;overflow:hidden}
+.sidebar{width:248px;flex-shrink:0;background:var(--bg-elevated);border-right:1px solid var(--border-subtle);display:flex;flex-direction:column;height:100vh}
+.logo{padding:22px 20px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-subtle)}
+.logo-mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:grid;place-items:center;font-weight:700;font-size:19px;color:#fff}
+.logo-text{font-weight:700;font-size:18px;letter-spacing:-.4px}
+.logo-text span{color:var(--text-secondary);font-weight:500;font-size:12px;display:block;margin-top:-2px}
+.nav{padding:14px 12px;flex:1;overflow-y:auto}
+.nav-section{font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--text-muted);padding:14px 12px 6px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:var(--text-secondary);cursor:pointer;transition:.15s;margin-bottom:2px;font-weight:500}
+.nav-item:hover{background:var(--bg-hover);color:var(--text)}
+.nav-item.active{background:var(--accent-soft);color:#60a5fa}
+.nav-item svg{width:18px;height:18px;flex-shrink:0}
+.sidebar-footer{padding:16px 18px;border-top:1px solid var(--border-subtle);font-size:12px;color:var(--text-muted)}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{height:60px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--bg-elevated);flex-shrink:0}
+.page-title{font-size:17px;font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:500;padding:6px 12px;border-radius:20px;background:var(--bg-hover);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--text-muted)}
+.pill.live .dot{background:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+.user{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500}
+.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:grid;place-items:center;font-size:12px;font-weight:700}
+.content{flex:1;overflow-y:auto;padding:24px 28px 44px}
+.view{display:none}
+.view.active{display:block;animation:fade .25s ease}
+.view.map-view.active{display:flex;flex-direction:column;height:100%}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.grid{display:grid;gap:16px}
+.grid-4{grid-template-columns:repeat(4,1fr)}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-2{grid-template-columns:1fr 1fr}
+.card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px 20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+.card-title{font-weight:600;font-size:15px}
+.kpi-label{font-size:12px;color:var(--text-secondary)}
+.kpi-value{font-size:28px;font-weight:700;letter-spacing:-.6px;margin-top:4px}
+.kpi-sub{font-size:12px;margin-top:4px;color:var(--text-muted)}
+.up{color:var(--green)}.down{color:var(--red)}.warn{color:var(--amber)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;color:var(--text-muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.6px;padding:11px 13px;border-bottom:1px solid var(--border-subtle)}
+td{padding:11px 13px;border-bottom:1px solid var(--border-subtle);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.025)}
+.mono{font-family:var(--mono);font-size:12.5px}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:4px 9px;border-radius:20px}
+.status::before{content:"";width:6px;height:6px;border-radius:50%}
+.status.online{background:var(--green-soft);color:var(--green)}.status.online::before{background:var(--green)}
+.status.offline{background:var(--red-soft);color:var(--red)}.status.offline::before{background:var(--red)}
+.status.warning{background:var(--amber-soft);color:var(--amber)}.status.warning::before{background:var(--amber)}
+.status.open{background:var(--green-soft);color:var(--green)}.status.open::before{background:var(--green)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:8px;font-weight:500;font-size:13.5px;border:none;cursor:pointer;transition:.15s}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-hover)}
+.btn-primary:disabled{opacity:.5;cursor:default}
+.btn-secondary{background:var(--bg-hover);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{background:#243044}
+.btn-sm{padding:6px 11px;font-size:12px}
+.btn-icon{width:34px;height:34px;padding:0;justify-content:center}
+.input,.select{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13.5px;outline:none;width:100%}
+.input:focus,.select:focus{border-color:var(--accent)}
+.form-row{display:flex;gap:12px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap}
+.form-group{flex:1;min-width:150px}
+.form-group label{display:block;font-size:12.5px;color:var(--text-secondary);margin-bottom:6px;font-weight:500}
+.progress{height:5px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:10px}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));width:0;transition:width .2s}
+.tag{font-size:11px;padding:2px 7px;border-radius:5px;background:var(--bg-hover);color:var(--text-secondary);font-weight:500}
+.empty{color:var(--text-muted);text-align:center;padding:28px;font-size:13px}
+.banner{background:var(--amber-soft);border:1px solid rgba(245,158,11,.25);color:#fcd34d;font-size:12.5px;padding:10px 14px;border-radius:8px;margin-bottom:16px;display:none}
+/* map */
+.map-toolbar{display:flex;align-items:center;gap:8px;padding:10px 0;flex-wrap:wrap}
+.map-stage{flex:1;position:relative;background:#0a0e13;border:1px solid var(--border-subtle);border-radius:var(--radius);overflow:hidden;min-height:400px}
+#mapSvg{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+#mapSvg.panning{cursor:grabbing}
+.node-hit{cursor:pointer}
+.node-label{font-size:12px;fill:var(--text);font-weight:500;pointer-events:none}
+.node-sub{font-size:10px;fill:var(--text-muted);pointer-events:none}
+.link{stroke:#2b3a4e;stroke-width:1.6;fill:none}
+.grid-line{stroke:#121a24;stroke-width:1}
+.glyph{stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ctx-menu{position:fixed;z-index:300;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow,0 8px 32px rgba(0,0,0,.5));padding:6px;min-width:200px;display:none}
+.ctx-menu div{padding:8px 12px;border-radius:7px;font-size:13px;cursor:pointer;color:var(--text-secondary)}
+.ctx-menu div:hover{background:var(--bg-hover);color:var(--text)}
+.ctx-menu .sep{height:1px;background:var(--border-subtle);margin:4px 2px;padding:0;cursor:default}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text-secondary);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+/* drawer */
+.drawer{position:fixed;top:0;right:0;width:400px;height:100vh;background:var(--bg-elevated);border-left:1px solid var(--border-subtle);box-shadow:-8px 0 32px rgba(0,0,0,.5);z-index:120;transform:translateX(100%);transition:transform .28s ease;overflow-y:auto}
+.drawer.open{transform:translateX(0)}
+.drawer-head{padding:20px 22px;border-bottom:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.drawer-body{padding:20px 22px}
+.sec{margin-bottom:22px}
+.sec h4{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;font-weight:600}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px}
+.close-x{background:none;border:none;color:var(--text-secondary);font-size:22px;cursor:pointer;line-height:1}
+.port-item{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:var(--bg);border-radius:8px;border:1px solid var(--border-subtle);margin-bottom:7px}
+.spark{width:100%;height:56px;background:var(--bg);border-radius:8px;border:1px solid var(--border-subtle)}
+.typebars{display:flex;flex-direction:column;gap:8px}
+.typebar{display:flex;align-items:center;gap:10px;font-size:12.5px}
+.typebar .bar{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
+.typebar .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan))}
+.toggle{position:relative;width:42px;height:24px;background:var(--border);border-radius:12px;cursor:pointer;transition:.2s;flex-shrink:0}
+.toggle.on{background:var(--accent)}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.2s}
+.toggle.on::after{left:20px}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border-subtle);gap:16px}
+.setting-row:last-child{border-bottom:none}
 </style>
 </head>
 <body>
 <aside class="sidebar">
-  <div class="logo">
-    <div class="logo-mark">N</div>
-    <div class="logo-text">NexusOS<span>Enterprise</span></div>
-  </div>
+  <div class="logo"><div class="logo-mark">N</div><div class="logo-text">NexusOS<span>Enterprise</span></div></div>
   <nav class="nav">
     <div class="nav-section">Обзор</div>
     <div class="nav-item active" data-view="dashboard"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Дашборд</div>
-    <div class="nav-section">Сканирование</div>
-    <div class="nav-item" data-view="network"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Сканер сети</div>
     <div class="nav-item" data-view="map"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Карта сети</div>
+    <div class="nav-section">Сканирование</div>
+    <div class="nav-item" data-view="network"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Сканер сети</div>
     <div class="nav-item" data-view="ports"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Сканер портов</div>
-    <div class="nav-section">Мониторинг</div>
-    <div class="nav-item" data-view="monitoring"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Мониторинг устройств</div>
-    <div class="nav-section">Сервисы</div>
-    <div class="nav-item" data-view="notifications"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>Оповещения</div>
-    <div class="nav-item" data-view="logs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Журналы</div>
+    <div class="nav-section">Система</div>
+    <div class="nav-item" data-view="settings"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82M4.6 9a1.65 1.65 0 00-.33-1.82"/></svg>Настройки</div>
+    <div class="nav-item" data-view="logs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Журнал</div>
   </nav>
-  <div class="sidebar-footer" id="sidebarFooter">NexusOS v2.4.1 · Enterprise<br>Сеть не просканирована</div>
+  <div class="sidebar-footer" id="sidebarFooter">NexusOS v2.5.0 · Enterprise<br>Сеть не просканирована</div>
 </aside>
 
 <main class="main">
   <header class="topbar">
     <div class="page-title" id="pageTitle">Дашборд</div>
     <div class="topbar-right">
+      <div class="pill" id="monPill" onclick="toggleMonitor()"><span class="dot"></span><span id="monPillText">Мониторинг выкл</span></div>
+      <button class="btn btn-primary btn-sm" onclick="startNetworkScan()">⟳ Сканировать</button>
       <div class="user"><div class="avatar">AK</div> admin</div>
     </div>
   </header>
 
-  <div class="content">
+  <div class="content" id="content">
     <!-- DASHBOARD -->
     <section class="view active" id="dashboard">
-      <div class="banner" id="browserBanner">⚠ Похоже, страница открыта в обычном браузере. Реальное сканирование работает только в приложении NexusOS (запустите NexusOS.exe или RUN-DEV.bat).</div>
-      <div class="grid grid-4" style="margin-bottom:22px">
-        <div class="card kpi"><div class="kpi-label">Активные устройства</div><div class="kpi-value" id="kpiDevices">—</div><div class="kpi-delta neutral" id="kpiDevicesSub">нет данных</div></div>
-        <div class="card kpi"><div class="kpi-label">Открытые порты (посл. скан)</div><div class="kpi-value" id="kpiPorts">—</div><div class="kpi-delta neutral" id="kpiPortsSub">нет данных</div></div>
-        <div class="card kpi"><div class="kpi-label">Ваш IP</div><div class="kpi-value" id="kpiIp" style="font-size:22px">—</div><div class="kpi-delta neutral" id="kpiIface">интерфейс —</div></div>
-        <div class="card kpi"><div class="kpi-label">Шлюз</div><div class="kpi-value" id="kpiGw" style="font-size:22px">—</div><div class="kpi-delta neutral">default gateway</div></div>
+      <div class="banner" id="browserBanner">⚠ Похоже, страница открыта в браузере. Реальное сканирование работает только в приложении NexusOS (NexusOS.exe).</div>
+      <div class="grid grid-4" style="margin-bottom:16px">
+        <div class="card"><div class="kpi-label">Устройств онлайн</div><div class="kpi-value" id="kOnline">—</div><div class="kpi-sub" id="kOnlineSub">из — всего</div></div>
+        <div class="card"><div class="kpi-label">Средняя задержка</div><div class="kpi-value" id="kLat">—</div><div class="kpi-sub">по мониторингу</div></div>
+        <div class="card"><div class="kpi-label">Рисковые порты</div><div class="kpi-value warn" id="kRisk">—</div><div class="kpi-sub">Telnet/FTP/RDP открыты</div></div>
+        <div class="card"><div class="kpi-label">Подсеть</div><div class="kpi-value" id="kSubnet" style="font-size:19px">—</div><div class="kpi-sub" id="kWhen">скан не выполнялся</div></div>
+      </div>
+      <div class="grid grid-2" style="margin-bottom:16px">
+        <div class="card"><div class="card-header"><div class="card-title">Устройства онлайн</div><span class="tag">live</span></div><svg class="spark" id="sparkOnline" viewBox="0 0 300 56" preserveAspectRatio="none"></svg></div>
+        <div class="card"><div class="card-header"><div class="card-title">Средняя задержка, мс</div><span class="tag">live</span></div><svg class="spark" id="sparkLat" viewBox="0 0 300 56" preserveAspectRatio="none"></svg></div>
       </div>
       <div class="grid grid-2">
-        <div class="card">
-          <div class="card-header"><div class="card-title">Последние обнаружения</div><button class="btn btn-primary btn-sm" onclick="goScan()">Сканировать сеть</button></div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>IP</th><th>Hostname</th><th>Вендор</th><th>Статус</th></tr></thead>
-              <tbody id="recentHosts"><tr><td colspan="4" class="empty">Запустите сканирование сети, чтобы увидеть устройства</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title">Сводка</div></div>
-          <div style="font-size:13.5px;line-height:2;color:var(--text-secondary)">
-            <div>Имя компьютера: <span class="mono" id="sumHost">—</span></div>
-            <div>Платформа: <span class="mono" id="sumPlatform">—</span></div>
-            <div>Подсеть сканирования: <span class="mono" id="sumSubnet">—</span></div>
-            <div>Найдено устройств: <span id="sumCount">—</span></div>
-            <div>Последний скан: <span id="sumWhen">—</span></div>
-          </div>
-        </div>
+        <div class="card"><div class="card-header"><div class="card-title">Типы устройств</div></div><div class="typebars" id="typeBars"><div class="empty">Нет данных</div></div></div>
+        <div class="card"><div class="card-header"><div class="card-title">События</div></div><div id="eventFeed" style="font-family:var(--mono);font-size:12px;line-height:1.9;color:var(--text-secondary);max-height:220px;overflow:auto"><div class="empty">—</div></div></div>
       </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="view map-view" id="map">
+      <div class="map-toolbar">
+        <button class="btn btn-primary btn-sm" onclick="startNetworkScan()">⟳ Пересканировать</button>
+        <button class="btn btn-secondary btn-sm" onclick="autoLayoutAndSave()">Авто-раскладка</button>
+        <button class="btn btn-secondary btn-sm" onclick="saveLayout()">💾 Сохранить раскладку</button>
+        <span style="width:1px;height:22px;background:var(--border)"></span>
+        <button class="btn btn-secondary btn-icon" title="Увеличить" onclick="zoomBy(1.2)">+</button>
+        <button class="btn btn-secondary btn-icon" title="Уменьшить" onclick="zoomBy(.83)">−</button>
+        <button class="btn btn-secondary btn-sm" onclick="fitView()">По размеру</button>
+        <span style="width:1px;height:22px;background:var(--border)"></span>
+        <button class="btn btn-secondary btn-sm" id="lblBtn" onclick="toggleSetting('showLabels')">Подписи</button>
+        <button class="btn btn-secondary btn-sm" id="gridBtn" onclick="toggleSetting('showGrid')">Сетка</button>
+        <button class="btn btn-secondary btn-sm" onclick="exportData('csv')">Экспорт CSV</button>
+        <span class="tag" id="mapInfo" style="margin-left:auto">—</span>
+      </div>
+      <div class="map-stage">
+        <svg id="mapSvg" xmlns="http://www.w3.org/2000/svg"><g id="viewport"></g></svg>
+      </div>
+      <div class="legend" id="mapLegend"></div>
     </section>
 
     <!-- NETWORK SCAN -->
     <section class="view" id="network">
-      <div class="card" style="margin-bottom:18px">
-        <div class="card-header"><div class="card-title">Сканирование сети</div></div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-title">Сканирование сети</div><button class="btn btn-secondary btn-sm" onclick="exportData('csv')">Экспорт CSV</button></div>
         <div class="form-row">
-          <div class="form-group"><label>Подсеть / цель</label><input class="input" id="netTarget" value="" placeholder="192.168.1.0/24"></div>
-          <button class="btn btn-primary" id="netBtn" onclick="startNetworkScan()">Запустить сканирование</button>
+          <div class="form-group"><label>Подсеть / цель</label><input class="input" id="netTarget" placeholder="192.168.1.0/24"></div>
+          <button class="btn btn-primary" id="netBtn" onclick="startNetworkScan()">Запустить</button>
         </div>
-        <div id="netProgress" style="display:none">
-          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:4px">Сканирование <span id="netStatus">0%</span></div>
-          <div class="progress"><div class="progress-bar" id="netBar"></div></div>
-        </div>
+        <div id="netProgress" style="display:none"><div style="font-size:13px;color:var(--text-secondary);margin-bottom:4px">Сканирование <span id="netStatus">0%</span></div><div class="progress"><div class="progress-bar" id="netBar"></div></div></div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title">Обнаруженные хосты</div><span class="tag" id="hostCount">0 хостов</span></div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>IP-адрес</th><th>MAC</th><th>Hostname</th><th>Вендор</th><th>Порты</th><th>Статус</th></tr></thead>
-            <tbody id="netResults"><tr><td colspan="6" class="empty">Нажмите «Запустить сканирование»</td></tr></tbody>
-          </table>
-        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>IP</th><th>MAC</th><th>Имя</th><th>Тип</th><th>Вендор</th><th>Порты</th><th>Статус</th></tr></thead>
+          <tbody id="netResults"><tr><td colspan="7" class="empty">Нажмите «Запустить»</td></tr></tbody>
+        </table></div>
       </div>
     </section>
 
-    <!-- NETWORK MAP -->
-    <section class="view" id="map">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Топология сети</div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button class="btn btn-secondary btn-sm" onclick="startNetworkScan()">Пересканировать</button>
-            <span class="tag" id="mapSubnet">—</span>
-          </div>
-        </div>
-        <div class="map-container" id="mapContainer">
-          <div class="empty" style="padding-top:220px">Карта строится из результатов сканирования сети.<br>Откройте «Сканер сети» и запустите скан.</div>
-        </div>
-        <div style="margin-top:14px;font-size:12.5px;color:var(--text-muted)">Кликните на устройство для просмотра деталей и сканирования портов. Голубой узел — ваш компьютер, синий со звёздочкой — шлюз.</div>
-      </div>
-    </section>
-
-    <!-- PORT SCAN -->
+    <!-- PORTS -->
     <section class="view" id="ports">
-      <div class="card" style="margin-bottom:18px">
+      <div class="card" style="margin-bottom:16px">
         <div class="card-header"><div class="card-title">Сканирование портов (TCP connect)</div></div>
         <div class="form-row">
-          <div class="form-group"><label>Цель (IP / hostname)</label><input class="input" id="portTarget" value="" placeholder="192.168.1.1"></div>
-          <div class="form-group" style="flex:0.6"><label>Порты</label><input class="input" id="portRange" value="" placeholder="например 1-1024 или пусто = частые"></div>
+          <div class="form-group"><label>Цель</label><input class="input" id="portTarget" placeholder="192.168.1.1"></div>
+          <div class="form-group" style="flex:.6"><label>Порты</label><input class="input" id="portRange" placeholder="1-1024 или пусто = частые"></div>
           <button class="btn btn-primary" id="portBtn" onclick="startPortScan()">Сканировать</button>
         </div>
-        <div id="portProgress" style="display:none">
-          <div style="font-size:13px;color:var(--text-secondary)">Сканирование портов… <span id="portStatus">0%</span></div>
-          <div class="progress"><div class="progress-bar" id="portBar"></div></div>
-        </div>
+        <div id="portProgress" style="display:none"><div style="font-size:13px;color:var(--text-secondary)">Сканирование… <span id="portStatus">0%</span></div><div class="progress"><div class="progress-bar" id="portBar"></div></div></div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title">Результаты</div><span class="tag" id="portCount">—</span></div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Порт</th><th>Протокол</th><th>Сервис</th><th>Статус</th></tr></thead>
-            <tbody id="portResults"><tr><td colspan="4" class="empty">Укажите цель и запустите сканирование</td></tr></tbody>
-          </table>
-        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Порт</th><th>Протокол</th><th>Сервис</th><th>Статус</th></tr></thead>
+          <tbody id="portResults"><tr><td colspan="4" class="empty">Укажите цель и запустите</td></tr></tbody>
+        </table></div>
       </div>
     </section>
 
-    <!-- MONITORING -->
-    <section class="view" id="monitoring">
-      <div class="card">
-        <div class="card-header"><div class="card-title">Мониторинг устройств</div><button class="btn btn-secondary btn-sm" onclick="startNetworkScan()">Обновить</button></div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Устройство</th><th>IP</th><th>MAC</th><th>Вендор</th><th>Статус</th></tr></thead>
-            <tbody id="monResults"><tr><td colspan="5" class="empty">Данные появятся после сканирования сети</td></tr></tbody>
-          </table>
+    <!-- SETTINGS -->
+    <section class="view" id="settings">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Сканирование</div></div>
+          <div class="form-group" style="margin-bottom:14px"><label>Подсеть по умолчанию</label><input class="input" id="setSubnet" placeholder="192.168.1.0/24"></div>
+          <div class="setting-row"><div><div style="font-weight:500">Определять тип устройств</div><div style="font-size:12px;color:var(--text-muted)">Сигнатурный опрос портов (точнее, но дольше)</div></div><div class="toggle on" id="setDeep" onclick="this.classList.toggle('on');persistSettings()"></div></div>
+          <div class="setting-row"><div><div style="font-weight:500">Интервал мониторинга</div><div style="font-size:12px;color:var(--text-muted)">Пинг доступности, сек</div></div><input class="input" id="setInterval" style="width:90px" value="5"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Карта</div></div>
+          <div class="setting-row"><div><div style="font-weight:500">Показывать подписи</div></div><div class="toggle on" id="setLabels" onclick="this.classList.toggle('on');persistSettings();renderMap()"></div></div>
+          <div class="setting-row"><div><div style="font-weight:500">Сетка</div></div><div class="toggle" id="setGrid" onclick="this.classList.toggle('on');persistSettings();renderMap()"></div></div>
+          <div class="setting-row"><div><div style="font-weight:500">Размер узлов</div></div><input type="range" id="setNodeSize" min="20" max="40" value="28" oninput="persistSettings();renderMap()"></div>
+          <div style="margin-top:14px;display:flex;gap:10px"><button class="btn btn-secondary btn-sm" onclick="resetLayout()">Сбросить раскладку</button><button class="btn btn-secondary btn-sm" onclick="exportData('json')">Экспорт JSON</button></div>
         </div>
       </div>
-    </section>
-
-    <!-- NOTIFICATIONS -->
-    <section class="view" id="notifications">
-      <div class="card">
-        <div class="card-header"><div class="card-title">Правила оповещений</div></div>
-        <div class="setting-row"><div><div style="font-weight:500">Новое устройство в сети</div><div style="font-size:12.5px;color:var(--text-muted)">Сравнение с прошлым сканом</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-        <div class="setting-row"><div><div style="font-weight:500">Открытый Telnet / FTP</div><div style="font-size:12.5px;color:var(--text-muted)">Политика безопасности</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-        <div class="setting-row"><div><div style="font-weight:500">Устройство недоступно</div><div style="font-size:12.5px;color:var(--text-muted)">Не ответило при сканировании</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
-        <div style="margin-top:14px;font-size:12.5px;color:var(--text-muted)">Раздел настроек. Доставка оповещений (e-mail/Telegram) подключается отдельно.</div>
-      </div>
+      <div class="card" style="margin-top:16px"><div class="card-header"><div class="card-title">О программе</div></div><div style="font-size:13px;color:var(--text-secondary);line-height:1.9">NexusOS Enterprise v2.5.0 — инструмент сетевого инженера: обнаружение устройств, интерактивная карта, сканер портов, мониторинг доступности и задержек.<br>Используйте только в сетях, которыми вы владеете или администрируете.</div></div>
     </section>
 
     <!-- LOGS -->
     <section class="view" id="logs">
       <div class="card">
         <div class="card-header"><div class="card-title">Журнал сессии</div><button class="btn btn-secondary btn-sm" onclick="clearLog()">Очистить</button></div>
-        <div id="logBox" style="font-family:var(--mono);font-size:12.5px;line-height:1.8;color:var(--text-secondary)"><div style="color:var(--text-muted)">Журнал пуст. Действия сканирования будут записываться здесь.</div></div>
+        <div id="logBox" style="font-family:var(--mono);font-size:12.5px;line-height:1.8;color:var(--text-secondary)"><div style="color:var(--text-muted)">Журнал пуст.</div></div>
       </div>
     </section>
   </div>
 </main>
 
-<div class="detail-panel" id="detailPanel">
-  <div class="detail-header">
-    <div><div style="font-size:16px;font-weight:600" id="detailName">—</div><div style="font-size:12.5px;color:var(--text-muted)" id="detailIp">—</div></div>
-    <button class="detail-close" onclick="closeDeviceDetail()">×</button>
+<!-- device drawer -->
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div><div style="font-size:16px;font-weight:600" id="dName">—</div><div class="mono" style="font-size:12.5px;color:var(--text-muted)" id="dIp">—</div></div>
+    <button class="close-x" onclick="closeDrawer()">×</button>
   </div>
-  <div class="detail-body">
-    <div class="detail-section">
-      <h4>Общая информация</h4>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13.5px">
+  <div class="drawer-body">
+    <div class="sec"><h4>Свойства</h4>
+      <div class="kv">
         <div><span style="color:var(--text-muted)">MAC:</span> <span class="mono" id="dMac">—</span></div>
         <div><span style="color:var(--text-muted)">Вендор:</span> <span id="dVendor">—</span></div>
-        <div><span style="color:var(--text-muted)">Тип:</span> <span id="dType">—</span></div>
-        <div><span style="color:var(--text-muted)">Статус:</span> <span id="dStatus">—</span></div>
+        <div><span style="color:var(--text-muted)">Статус:</span> <span id="dStat">—</span></div>
+        <div><span style="color:var(--text-muted)">Задержка:</span> <span id="dRtt">—</span></div>
       </div>
+      <div style="margin-top:12px"><label style="font-size:12px;color:var(--text-secondary)">Тип устройства</label>
+        <select class="select" id="dType" style="margin-top:6px" onchange="setNodeType()"></select></div>
     </div>
-    <div class="detail-section">
-      <h4>Состояние портов</h4>
-      <div class="port-list" id="dPortList"><div style="color:var(--text-muted);font-size:13px">Запустите скан портов для этого устройства.</div></div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:8px">
-      <button class="btn btn-primary btn-sm" id="dScanBtn" onclick="scanDetailPorts()">Сканировать порты</button>
+    <div class="sec"><h4>Задержка (live)</h4><svg class="spark" id="dSpark" viewBox="0 0 300 56" preserveAspectRatio="none"></svg></div>
+    <div class="sec"><h4>Порты</h4><div id="dPorts"><div style="color:var(--text-muted);font-size:13px">Нажмите «Сканировать порты».</div></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" id="dScan" onclick="scanDrawerPorts()">Сканировать порты</button>
+      <button class="btn btn-secondary btn-sm" onclick="openHttp()">Открыть в браузере</button>
+      <button class="btn btn-secondary btn-sm" onclick="centerOnNode()">На карте</button>
     </div>
   </div>
 </div>
 
+<div class="ctx-menu" id="ctxMenu"></div>
+
 <script>
-const titles = { dashboard:'Дашборд', network:'Сканер сети', map:'Карта сети', ports:'Сканер портов', monitoring:'Мониторинг устройств', notifications:'Оповещения', logs:'Журналы' };
-const $ = s => document.querySelector(s);
 const API = window.nexus;
-let lastScan = null;
-let detailIp = null;
+const $ = s => document.querySelector(s);
+const TYPES = {router:'Роутер',switch:'Коммутатор',ap:'Точка доступа',server:'Сервер',nas:'NAS',pc:'ПК',laptop:'Ноутбук',camera:'Камера',printer:'Принтер',phone:'Телефон',iot:'IoT',unknown:'Неизвестно'};
+const titles = {dashboard:'Дашборд',map:'Карта сети',network:'Сканер сети',ports:'Сканер портов',settings:'Настройки',logs:'Журнал'};
 
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    item.classList.add('active');
-    const view = item.dataset.view;
-    document.getElementById(view).classList.add('active');
-    document.getElementById('pageTitle').textContent = titles[view];
-  });
-});
-function goView(v){ document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active', i.dataset.view===v)); document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active', x.id===v)); document.getElementById('pageTitle').textContent = titles[v]; }
-function goScan(){ goView('network'); }
+let lastScan=null, hostsByIp={}, selIp=null, drawerIp=null, monitoring=false, offMon=null;
+let monData={}; // ip -> {alive,rtt,hist:[]}
+let hist={online:[],lat:[]};
+let state={positions:{},labels:{},typeOverride:{},settings:{showLabels:true,showGrid:false,nodeSize:28,monInterval:5,deep:true,subnet:''}};
+let view={tx:40,ty:40,scale:1};
 
-function log(msg, kind){
-  const box = $('#logBox');
-  if(box.dataset.started!=='1'){ box.innerHTML=''; box.dataset.started='1'; }
-  const t = new Date().toLocaleTimeString('ru-RU');
-  const color = kind==='err'?'var(--red)':kind==='ok'?'var(--green)':'var(--cyan)';
-  box.insertAdjacentHTML('afterbegin', `<div><span style="color:var(--text-muted)">${t}</span> <span style="color:${color}">${kind==='err'?'ERR':kind==='ok'?'OK':'INFO'}</span> ${msg}</div>`);
+/* ---------- nav ---------- */
+document.querySelectorAll('.nav-item').forEach(it=>it.addEventListener('click',()=>goView(it.dataset.view)));
+function goView(v){
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.view===v));
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===v));
+  $('#pageTitle').textContent=titles[v];
+  if(v==='map') requestAnimationFrame(()=>{ if(!Object.keys(state.positions).length&&lastScan) autoLayoutAndSave(); else renderMap(); });
 }
-function clearLog(){ const b=$('#logBox'); b.dataset.started='0'; b.innerHTML='<div style="color:var(--text-muted)">Журнал очищен.</div>'; }
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function log(m,k){const b=$('#logBox');if(b.dataset.s!=='1'){b.innerHTML='';b.dataset.s='1';}const t=new Date().toLocaleTimeString('ru-RU');const c=k==='err'?'var(--red)':k==='ok'?'var(--green)':'var(--cyan)';b.insertAdjacentHTML('afterbegin',`<div><span style="color:var(--text-muted)">${t}</span> <span style="color:${c}">${k==='err'?'ERR':k==='ok'?'OK':'INFO'}</span> ${esc(m)}</div>`);pushEvent(m,k);}
+function clearLog(){const b=$('#logBox');b.dataset.s='0';b.innerHTML='<div style="color:var(--text-muted)">Журнал очищен.</div>';}
+function pushEvent(m,k){const f=$('#eventFeed');if(f.dataset.s!=='1'){f.innerHTML='';f.dataset.s='1';}const t=new Date().toLocaleTimeString('ru-RU');const c=k==='err'?'var(--red)':k==='ok'?'var(--green)':'var(--text-secondary)';f.insertAdjacentHTML('afterbegin',`<div style="color:${c}"><span style="color:var(--text-muted)">${t}</span> ${esc(m)}</div>`);while(f.children.length>40)f.removeChild(f.lastChild);}
 
-function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-
-async function initLocal(){
-  if(!API){ $('#browserBanner').style.display='block'; return; }
-  try{
-    const info = await API.getLocalInfo();
-    if(info){
-      $('#kpiIp').textContent = info.ip || '—';
-      $('#kpiGw').textContent = info.gateway || '—';
-      $('#kpiIface').textContent = 'интерфейс ' + (info.iface||'—');
-      $('#sumHost').textContent = info.hostname || '—';
-      $('#sumPlatform').textContent = info.platform || '—';
-      if(info.ip){
-        const base = info.ip.split('.').slice(0,3).join('.') + '.0/24';
-        $('#netTarget').value = base;
-        $('#sumSubnet').textContent = base;
-        $('#mapSubnet').textContent = base;
-      }
-      $('#portTarget').value = info.gateway || info.ip || '';
-    }
-  }catch(e){ log('Не удалось получить данные интерфейса: '+e.message,'err'); }
+/* ---------- init ---------- */
+async function init(){
+  if(!API){$('#browserBanner').style.display='block';return;}
+  const st=await API.loadState(); if(st&&typeof st==='object'){state=Object.assign(state,st);state.settings=Object.assign({showLabels:true,showGrid:false,nodeSize:28,monInterval:5,deep:true,subnet:''},st.settings||{});state.positions=st.positions||{};state.labels=st.labels||{};state.typeOverride=st.typeOverride||{};}
+  applySettingsToUI();
+  const info=await API.getLocalInfo().catch(()=>null);
+  if(info&&info.ip){const base=state.settings.subnet||info.ip.split('.').slice(0,3).join('.')+'.0/24';$('#netTarget').value=base;$('#setSubnet').value=base;$('#kSubnet').textContent=base;$('#portTarget').value=info.gateway||info.ip;}
+  fillTypeSelect();
+  offMon=API.onMonitor(onMonitor);
+  setInterval(tickDash,3000);
 }
+function applySettingsToUI(){
+  $('#setLabels').classList.toggle('on',!!state.settings.showLabels);
+  $('#setGrid').classList.toggle('on',!!state.settings.showGrid);
+  $('#setDeep').classList.toggle('on',state.settings.deep!==false);
+  $('#setNodeSize').value=state.settings.nodeSize||28;
+  $('#setInterval').value=state.settings.monInterval||5;
+  $('#lblBtn').style.opacity=state.settings.showLabels?1:.5;
+  $('#gridBtn').style.opacity=state.settings.showGrid?1:.5;
+}
+function persistSettings(){
+  state.settings.showLabels=$('#setLabels').classList.contains('on');
+  state.settings.showGrid=$('#setGrid').classList.contains('on');
+  state.settings.deep=$('#setDeep').classList.contains('on');
+  state.settings.nodeSize=+$('#setNodeSize').value||28;
+  state.settings.monInterval=Math.max(2,+$('#setInterval').value||5);
+  state.settings.subnet=$('#setSubnet').value.trim();
+  $('#lblBtn').style.opacity=state.settings.showLabels?1:.5;
+  $('#gridBtn').style.opacity=state.settings.showGrid?1:.5;
+  saveState();
+}
+function toggleSetting(k){state.settings[k]=!state.settings[k];applySettingsToUI();saveState();renderMap();}
+async function saveState(){ if(API) await API.saveState(state); }
+function fillTypeSelect(){const s=$('#dType');s.innerHTML=Object.keys(TYPES).map(t=>`<option value="${t}">${TYPES[t]}</option>`).join('');}
 
+/* ---------- scan ---------- */
 async function startNetworkScan(){
-  if(!API){ $('#browserBanner').style.display='block'; goView('dashboard'); return; }
-  goView('network');
-  const btn = $('#netBtn'); const prog = $('#netProgress'); const bar = $('#netBar'); const st = $('#netStatus');
-  btn.disabled = true; prog.style.display='block'; bar.style.width='0%'; st.textContent='запуск…';
-  log('Старт сканирования сети '+$('#netTarget').value);
-  const off = API.onProgress(p=>{
-    const pct = Math.max(1, Math.round(p.done/p.total*100));
-    bar.style.width = pct+'%';
-    st.textContent = (p.phase==='ping'?'поиск хостов ':'определение имён ')+pct+'%';
-  });
+  if(!API){$('#browserBanner').style.display='block';goView('dashboard');return;}
+  const btn=$('#netBtn'),prog=$('#netProgress'),bar=$('#netBar'),stt=$('#netStatus');
+  if(btn)btn.disabled=true;prog.style.display='block';bar.style.width='0%';stt.textContent='запуск…';
+  log('Сканирование сети '+$('#netTarget').value);
+  const off=API.onProgress(p=>{const pct=Math.max(1,Math.round(p.done/p.total*100));bar.style.width=pct+'%';stt.textContent=(p.phase==='ping'?'поиск ':p.phase==='classify'?'опрос типов ':'имена ')+pct+'%';});
   try{
-    const res = await API.scanNetwork({ target: $('#netTarget').value });
-    lastScan = res; lastScan.when = new Date();
-    renderHosts(res); buildMap(res); updateDashboard(res); renderMonitoring(res);
-    st.textContent = `готово · найдено ${res.count}`; bar.style.width='100%';
-    log(`Сканирование завершено: ${res.count} устройств в ${res.base}`, 'ok');
-  }catch(e){ st.textContent='ошибка'; log('Ошибка сканирования: '+e.message,'err'); }
-  finally{ if(off) off(); btn.disabled=false; }
+    const res=await API.scanNetwork({target:$('#netTarget').value,deep:state.settings.deep});
+    lastScan=res;lastScan.when=new Date();hostsByIp={};res.hosts.forEach(h=>{if(state.typeOverride[h.ip])h.type=state.typeOverride[h.ip];hostsByIp[h.ip]=h;});
+    renderTable();updateDash();layoutIfNeeded();renderMap();
+    stt.textContent='готово · '+res.count;bar.style.width='100%';
+    log('Найдено устройств: '+res.count+' в '+res.base,'ok');
+    if(monitoring) restartMonitor();
+  }catch(e){stt.textContent='ошибка';log('Ошибка: '+e.message,'err');}
+  finally{if(off)off();if(btn)btn.disabled=false;}
 }
-
-function hostLabel(h){ if(h.host) return h.host; if(h.isGateway) return 'Шлюз'; if(h.isLocal) return 'Этот ПК'; return h.vendor || '—'; }
-
-function renderHosts(res){
-  const tb = $('#netResults'); tb.innerHTML='';
-  $('#hostCount').textContent = res.count + ' хостов';
-  if(!res.hosts.length){ tb.innerHTML='<tr><td colspan="6" class="empty">Устройства не обнаружены</td></tr>'; return; }
-  for(const h of res.hosts){
-    const tags = (h.isGateway?'<span class="tag">шлюз</span> ':'') + (h.isLocal?'<span class="tag">этот ПК</span>':'');
-    tb.insertAdjacentHTML('beforeend',
-      `<tr>
-        <td class="mono">${esc(h.ip)}</td>
-        <td class="mono">${esc(h.mac)||'—'}</td>
-        <td>${esc(h.host)||'—'} ${tags}</td>
-        <td>${esc(h.vendor)||'—'}</td>
-        <td><button class="btn btn-secondary btn-sm" onclick="quickPorts('${esc(h.ip)}')">Сканировать</button></td>
-        <td><span class="status online">Online</span></td>
-      </tr>`);
+function typeName(t){return TYPES[t]||TYPES.unknown;}
+function nodeName(h){return state.labels[h.ip]||h.host||(h.isGateway?'Шлюз':h.isLocal?'Этот ПК':typeName(h.type));}
+function renderTable(){
+  const tb=$('#netResults');tb.innerHTML='';$('#hostCount').textContent=(lastScan?lastScan.count:0)+' хостов';
+  if(!lastScan||!lastScan.hosts.length){tb.innerHTML='<tr><td colspan="7" class="empty">Устройства не обнаружены</td></tr>';return;}
+  for(const h of lastScan.hosts){
+    const tags=(h.isGateway?'<span class="tag">шлюз</span> ':'')+(h.isLocal?'<span class="tag">этот ПК</span>':'');
+    tb.insertAdjacentHTML('beforeend',`<tr>
+      <td class="mono">${esc(h.ip)}</td><td class="mono">${esc(h.mac)||'—'}</td>
+      <td>${esc(nodeName(h))} ${tags}</td><td>${esc(typeName(h.type))}</td><td>${esc(h.vendor)||'—'}</td>
+      <td class="mono" style="font-size:11.5px">${(h.sigPorts||[]).join(', ')||'—'}</td>
+      <td><span class="status online">Online</span></td></tr>`);
   }
 }
 
-function renderMonitoring(res){
-  const tb = $('#monResults'); tb.innerHTML='';
-  if(!res.hosts.length){ tb.innerHTML='<tr><td colspan="5" class="empty">Нет данных</td></tr>'; return; }
-  for(const h of res.hosts){
-    tb.insertAdjacentHTML('beforeend',
-      `<tr><td>${esc(hostLabel(h))}</td><td class="mono">${esc(h.ip)}</td><td class="mono">${esc(h.mac)||'—'}</td><td>${esc(h.vendor)||'—'}</td><td><span class="status online">OK</span></td></tr>`);
+/* ---------- dashboard ---------- */
+function updateDash(){
+  if(!lastScan)return;
+  $('#kSubnet').textContent=lastScan.base;$('#kWhen').textContent=(lastScan.when||new Date()).toLocaleString('ru-RU');
+  $('#kOnline').textContent=lastScan.count;$('#kOnlineSub').textContent='из '+lastScan.count+' найдено';
+  const risky=lastScan.hosts.filter(h=>(h.sigPorts||[]).some(p=>[23,21,3389].includes(p))).length;$('#kRisk').textContent=risky;
+  $('#sidebarFooter').innerHTML='NexusOS v2.5.0 · Enterprise<br>'+lastScan.count+' устройств · '+lastScan.base;
+  const counts={};lastScan.hosts.forEach(h=>counts[h.type]=(counts[h.type]||0)+1);
+  const max=Math.max(1,...Object.values(counts));
+  const tb=$('#typeBars');const keys=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  tb.innerHTML=keys.map(t=>`<div class="typebar"><span style="width:92px;color:var(--text-secondary)">${typeName(t)}</span><div class="bar"><i style="width:${counts[t]/max*100}%"></i></div><span style="width:28px;text-align:right">${counts[t]}</span></div>`).join('')||'<div class="empty">Нет данных</div>';
+}
+function tickDash(){
+  if(!monitoring)return;
+  const ips=Object.keys(monData);let on=0,s=0,c=0;
+  ips.forEach(ip=>{const m=monData[ip];if(m.alive){on++;if(m.rtt!=null){s+=m.rtt;c++;}}});
+  const avg=c?s/c:null;
+  hist.online.push(on);hist.lat.push(avg==null?0:avg);if(hist.online.length>60){hist.online.shift();hist.lat.shift();}
+  $('#kOnline').textContent=on;$('#kOnlineSub').textContent='из '+ips.length+' в мониторинге';
+  $('#kLat').textContent=avg==null?'—':Math.round(avg)+' мс';
+  sparkline('#sparkOnline',hist.online,'#22d3ee');sparkline('#sparkLat',hist.lat,'#3b82f6');
+}
+function sparkline(sel,arr,color){
+  const svg=$(sel);if(!svg)return;if(!arr.length){svg.innerHTML='';return;}
+  const w=300,h=56,mx=Math.max(1,...arr),n=arr.length;
+  const pts=arr.map((v,i)=>`${(i/(Math.max(1,n-1)))*w},${h-4-(v/mx)*(h-8)}`).join(' ');
+  svg.innerHTML=`<polyline fill="none" stroke="${color}" stroke-width="2" points="${pts}"/><polyline fill="${color}22" stroke="none" points="0,${h} ${pts} ${w},${h}"/>`;
+}
+
+/* ---------- monitoring ---------- */
+function toggleMonitor(){monitoring?stopMonitor():startMonitor();}
+async function startMonitor(){
+  if(!API||!lastScan){log('Сначала выполните сканирование','err');return;}
+  const ips=lastScan.hosts.map(h=>h.ip);
+  await API.monitorStart({ips,interval:state.settings.monInterval});
+  monitoring=true;$('#monPill').classList.add('live');$('#monPillText').textContent='Мониторинг вкл';
+  log('Мониторинг запущен ('+ips.length+' хостов, '+state.settings.monInterval+'с)','ok');
+}
+async function stopMonitor(){if(API)await API.monitorStop();monitoring=false;$('#monPill').classList.remove('live');$('#monPillText').textContent='Мониторинг выкл';log('Мониторинг остановлен');}
+async function restartMonitor(){await stopMonitor();await startMonitor();}
+function onMonitor(d){
+  const m=monData[d.ip]||(monData[d.ip]={alive:false,rtt:null,hist:[]});
+  m.alive=d.alive;m.rtt=d.rtt;m.hist.push(d.alive?(d.rtt==null?0:d.rtt):-1);if(m.hist.length>60)m.hist.shift();
+  updateNodeStatus(d.ip);
+  if(drawerIp===d.ip){$('#dStat').innerHTML=statusBadge(d.ip);$('#dRtt').textContent=d.rtt==null?(d.alive?'<1 мс':'—'):Math.round(d.rtt)+' мс';sparkline('#dSpark',m.hist.map(v=>v<0?0:v),'#22d3ee');}
+}
+function statusColor(ip){const m=monData[ip];if(!m)return '#3b82f6';if(!m.alive)return '#ef4444';if(m.rtt!=null&&m.rtt>100)return '#f59e0b';return '#10b981';}
+function statusBadge(ip){const m=monData[ip];if(!m)return '<span class="status online">Online</span>';if(!m.alive)return '<span class="status offline">Offline</span>';if(m.rtt!=null&&m.rtt>100)return '<span class="status warning">Высокая задержка</span>';return '<span class="status online">Online</span>';}
+
+/* ---------- map ---------- */
+const NS='http://www.w3.org/2000/svg';
+function layoutIfNeeded(){ if(!lastScan)return; lastScan.hosts.forEach(h=>{ if(!state.positions[h.ip]) {/* leave; autoLayout fills */} }); if(lastScan.hosts.some(h=>!state.positions[h.ip])) autoLayout(); }
+function autoLayout(){
+  if(!lastScan)return;const cx=1000,cy=640;const gw=lastScan.hosts.find(h=>h.isGateway);
+  if(gw)state.positions[gw.ip]={x:cx,y:cy};
+  const others=lastScan.hosts.filter(h=>!h.isGateway);let placed=0,ring=1;
+  while(placed<others.length){const cap=10*ring;const inRing=Math.min(cap,others.length-placed);for(let j=0;j<inRing;j++){const ang=(j/inRing)*2*Math.PI-Math.PI/2;const r=165*ring;state.positions[others[placed+j].ip]={x:cx+r*Math.cos(ang),y:cy+r*Math.sin(ang)};}placed+=inRing;ring++;}
+}
+function autoLayoutAndSave(){autoLayout();fitView();renderMap();saveState();log('Карта: авто-раскладка');}
+function saveLayout(){saveState();log('Раскладка карты сохранена','ok');}
+function resetLayout(){state.positions={};saveState();if(lastScan){autoLayout();renderMap();fitView();}log('Раскладка сброшена');}
+
+function glyph(type,s){
+  const col='currentColor';const g=(inner)=>`<g class="glyph" stroke="${col}">${inner}</g>`;
+  const r=s*0.5;
+  switch(type){
+    case 'router':return g(`<rect x="${-r}" y="${-r*0.5}" width="${2*r}" height="${r}" rx="3"/><line x1="${-r*0.5}" y1="${-r*0.5}" x2="${-r*0.7}" y2="${-r*1.1}"/><line x1="${r*0.5}" y1="${-r*0.5}" x2="${r*0.7}" y2="${-r*1.1}"/><circle cx="0" cy="0" r="1.4" fill="${col}"/>`);
+    case 'switch':return g(`<rect x="${-r}" y="${-r*0.6}" width="${2*r}" height="${r*1.2}" rx="3"/><line x1="${-r*0.6}" y1="${r*0.2}" x2="${-r*0.6}" y2="${r*0.45}"/><line x1="${-r*0.2}" y1="${r*0.2}" x2="${-r*0.2}" y2="${r*0.45}"/><line x1="${r*0.2}" y1="${r*0.2}" x2="${r*0.2}" y2="${r*0.45}"/><line x1="${r*0.6}" y1="${r*0.2}" x2="${r*0.6}" y2="${r*0.45}"/>`);
+    case 'ap':return g(`<circle cx="0" cy="${r*0.4}" r="2" fill="${col}"/><path d="M${-r*0.5} ${-r*0.2} A ${r*0.7} ${r*0.7} 0 0 1 ${r*0.5} ${-r*0.2}"/><path d="M${-r*0.9} ${-r*0.6} A ${r*1.2} ${r*1.2} 0 0 1 ${r*0.9} ${-r*0.6}"/>`);
+    case 'server':return g(`<rect x="${-r*0.7}" y="${-r}" width="${1.4*r}" height="${2*r}" rx="3"/><line x1="${-r*0.4}" y1="${-r*0.5}" x2="${r*0.4}" y2="${-r*0.5}"/><line x1="${-r*0.4}" y1="0" x2="${r*0.4}" y2="0"/><line x1="${-r*0.4}" y1="${r*0.5}" x2="${r*0.4}" y2="${r*0.5}"/>`);
+    case 'nas':return g(`<rect x="${-r*0.7}" y="${-r}" width="${1.4*r}" height="${2*r}" rx="3"/><line x1="${-r*0.4}" y1="${-r*0.45}" x2="${r*0.4}" y2="${-r*0.45}"/><line x1="${-r*0.4}" y1="${r*0.1}" x2="${r*0.4}" y2="${r*0.1}"/>`);
+    case 'pc':return g(`<rect x="${-r}" y="${-r*0.7}" width="${2*r}" height="${r*1.3}" rx="3"/><line x1="0" y1="${r*0.6}" x2="0" y2="${r*0.9}"/><line x1="${-r*0.4}" y1="${r*0.9}" x2="${r*0.4}" y2="${r*0.9}"/>`);
+    case 'laptop':return g(`<rect x="${-r*0.8}" y="${-r*0.6}" width="${1.6*r}" height="${r*1.1}" rx="2"/><line x1="${-r}" y1="${r*0.7}" x2="${r}" y2="${r*0.7}"/>`);
+    case 'camera':return g(`<rect x="${-r}" y="${-r*0.6}" width="${2*r}" height="${r*1.2}" rx="4"/><circle cx="0" cy="0" r="${r*0.4}"/>`);
+    case 'printer':return g(`<rect x="${-r*0.8}" y="${-r*0.2}" width="${1.6*r}" height="${r}" rx="2"/><rect x="${-r*0.5}" y="${-r*0.8}" width="${r}" height="${r*0.6}"/><line x1="${-r*0.4}" y1="${r*0.5}" x2="${r*0.4}" y2="${r*0.5}"/>`);
+    case 'phone':return g(`<rect x="${-r*0.5}" y="${-r}" width="${r}" height="${2*r}" rx="3"/><line x1="${-r*0.15}" y1="${r*0.7}" x2="${r*0.15}" y2="${r*0.7}"/>`);
+    case 'iot':return g(`<rect x="${-r*0.6}" y="${-r*0.6}" width="${1.2*r}" height="${1.2*r}" rx="2"/><line x1="${-r*0.6}" y1="${-r*0.2}" x2="${-r}" y2="${-r*0.2}"/><line x1="${-r*0.6}" y1="${r*0.2}" x2="${-r}" y2="${r*0.2}"/><line x1="${r*0.6}" y1="${-r*0.2}" x2="${r}" y2="${-r*0.2}"/><line x1="${r*0.6}" y1="${r*0.2}" x2="${r}" y2="${r*0.2}"/>`);
+    default:return g(`<circle cx="0" cy="0" r="${r*0.8}"/><text x="0" y="${r*0.35}" text-anchor="middle" font-size="${r}" fill="${col}" stroke="none">?</text>`);
   }
 }
-
-function updateDashboard(res){
-  $('#kpiDevices').textContent = res.count;
-  $('#kpiDevicesSub').textContent = res.base;
-  $('#kpiGw').textContent = res.gateway || '—';
-  $('#sumSubnet').textContent = res.base;
-  $('#sumCount').textContent = res.count;
-  $('#sumWhen').textContent = (lastScan.when||new Date()).toLocaleString('ru-RU');
-  $('#sidebarFooter').innerHTML = 'NexusOS v2.4.1 · Enterprise<br>'+res.count+' устройств · '+res.base;
-  const rc = $('#recentHosts'); rc.innerHTML='';
-  res.hosts.slice(0,8).forEach(h=>{
-    rc.insertAdjacentHTML('beforeend', `<tr><td class="mono">${esc(h.ip)}</td><td>${esc(hostLabel(h))}</td><td>${esc(h.vendor)||'—'}</td><td><span class="status online">Online</span></td></tr>`);
+function renderMap(){
+  const vp=$('#viewport');if(!vp)return;
+  if(!lastScan||!lastScan.hosts.length){vp.innerHTML='<text x="60" y="60" fill="#5c6f87" font-size="14">Карта строится после сканирования сети.</text>';applyTransform();renderLegend();return;}
+  const sz=state.settings.nodeSize||28;const showL=state.settings.showLabels;
+  let s='';
+  if(state.settings.showGrid){for(let x=0;x<2200;x+=80)s+=`<line class="grid-line" x1="${x}" y1="0" x2="${x}" y2="1400"/>`;for(let y=0;y<1400;y+=80)s+=`<line class="grid-line" x1="0" y1="${y}" x2="2200" y2="${y}"/>`;}
+  const gw=lastScan.hosts.find(h=>h.isGateway);const gp=gw?state.positions[gw.ip]:null;
+  if(gp)lastScan.hosts.forEach(h=>{if(h.isGateway)return;const p=state.positions[h.ip];if(p)s+=`<line class="link" x1="${gp.x}" y1="${gp.y}" x2="${p.x}" y2="${p.y}"/>`;});
+  lastScan.hosts.forEach(h=>{
+    const p=state.positions[h.ip];if(!p)return;const col=statusColor(h.ip);const rr=h.isGateway?sz*1.25:sz;
+    s+=`<g class="node-hit" data-ip="${esc(h.ip)}" transform="translate(${p.x},${p.y})">
+      <circle r="${rr+3}" fill="none" stroke="${col}" stroke-width="2.5" opacity="0.9"/>
+      <circle r="${rr}" fill="#15202e" stroke="#2a3648" stroke-width="1.5"/>
+      <g transform="translate(0,0)" color="#cfe0f2">${glyph(h.type,rr*1.1)}</g>
+      ${showL?`<text class="node-label" x="0" y="${rr+16}" text-anchor="middle">${esc((nodeName(h)||'').slice(0,18))}</text><text class="node-sub" x="0" y="${rr+30}" text-anchor="middle">${esc(h.ip)}</text>`:''}
+    </g>`;
   });
-}
-
-function nodeSvg(x,y,r,fill,stroke,label,sub,ip,star){
-  return `<g class="device-node" onclick="openDeviceDetail('${esc(ip)}')">
-    <circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}"/>
-    ${star?`<text x="${x}" y="${y+5}" text-anchor="middle" font-size="16" fill="#fde047" style="pointer-events:none">★</text>`:''}
-    <text x="${x}" y="${y+r+16}" text-anchor="middle">${esc((label||'').slice(0,16))}</text>
-    <text x="${x}" y="${y+r+30}" text-anchor="middle" fill="#8b9cb3" font-size="10">${esc(sub)}</text>
-  </g>`;
-}
-
-function buildMap(res){
-  const c = $('#mapContainer');
-  $('#mapSubnet').textContent = res.base;
-  const hosts = res.hosts.slice(0, 80);
-  if(!hosts.length){ c.innerHTML='<div class="empty" style="padding-top:220px">Устройства не обнаружены</div>'; return; }
-  const gw = hosts.find(h=>h.isGateway);
-  const others = hosts.filter(h=>!h.isGateway);
-  const perRow = 8;
-  const rows = Math.ceil(others.length/perRow);
-  const height = Math.max(520, 200 + rows*120 + 40);
-  const gx = 450, gy = 70;
-  const pos = [];
-  others.forEach((h,i)=>{
-    const r = Math.floor(i/perRow);
-    const inRow = Math.min(perRow, others.length - r*perRow);
-    const dx = 760/(Math.max(1,perRow-1));
-    const rowW = (inRow-1)*dx;
-    const startX = 450 - rowW/2;
-    const x = inRow===1 ? 450 : startX + (i%perRow)*dx;
-    const y = 210 + r*120;
-    pos.push({h,x,y});
+  vp.innerHTML=s;
+  vp.querySelectorAll('.node-hit').forEach(n=>{
+    n.addEventListener('pointerdown',onNodeDown);
+    n.addEventListener('contextmenu',onNodeCtx);
   });
-  let svg = `<svg class="map-svg" viewBox="0 0 900 ${height}" xmlns="http://www.w3.org/2000/svg">`;
-  if(gw) pos.forEach(p=> svg += `<line class="link-line active" x1="${gx}" y1="${gy}" x2="${p.x}" y2="${p.y}"/>`);
-  if(gw) svg += nodeSvg(gx,gy,28,'#1e3a5f','#3b82f6', gw.host||'Шлюз', gw.ip, gw.ip, true);
-  pos.forEach(p=>{
-    const stroke = p.h.isLocal ? '#22d3ee' : '#3b82f6';
-    svg += nodeSvg(p.x,p.y,22,'#1e3a5f',stroke, hostLabel(p.h), p.h.ip, p.h.ip, false);
-  });
-  svg += `</svg>`;
-  c.innerHTML = svg;
+  applyTransform();renderLegend();
+  $('#mapInfo').textContent=lastScan.base+' · '+lastScan.count+' устройств';
+}
+function renderLegend(){
+  const items=[['#10b981','online'],['#f59e0b','задержка >100мс'],['#ef4444','offline'],['#3b82f6','не в мониторинге']];
+  $('#mapLegend').innerHTML=items.map(([c,t])=>`<span><i style="background:${c}"></i>${t}</span>`).join('')+'<span style="color:var(--text-muted)">· перетаскивайте узлы, колесо — зум, ПКМ — меню</span>';
+}
+function applyTransform(){$('#viewport').setAttribute('transform',`translate(${view.tx},${view.ty}) scale(${view.scale})`);}
+function updateNodeStatus(ip){const vp=$('#viewport');if(!vp)return;const n=vp.querySelector(`.node-hit[data-ip="${CSS.escape(ip)}"]`);if(!n)return;const ring=n.querySelector('circle');if(ring)ring.setAttribute('stroke',statusColor(ip));}
+
+/* pan/zoom/drag */
+const svg=$('#mapSvg');
+let dragNode=null,dragStart=null,panStart=null;
+function svgPoint(e){const r=svg.getBoundingClientRect();return {x:(e.clientX-r.left-view.tx)/view.scale,y:(e.clientY-r.top-view.ty)/view.scale};}
+function onNodeDown(e){e.stopPropagation();const ip=e.currentTarget.getAttribute('data-ip');const pt=svgPoint(e);dragNode={ip,ox:state.positions[ip].x-pt.x,oy:state.positions[ip].y-pt.y,moved:false};svg.setPointerCapture(e.pointerId);}
+svg.addEventListener('pointerdown',e=>{if(dragNode)return;panStart={x:e.clientX-view.tx,y:e.clientY-view.ty};svg.classList.add('panning');svg.setPointerCapture(e.pointerId);hideCtx();});
+svg.addEventListener('pointermove',e=>{
+  if(dragNode){const pt=svgPoint(e);state.positions[dragNode.ip]={x:pt.x+dragNode.ox,y:pt.y+dragNode.oy};dragNode.moved=true;renderLinksAndNode(dragNode.ip);}
+  else if(panStart){view.tx=e.clientX-panStart.x;view.ty=e.clientY-panStart.y;applyTransform();}
+});
+svg.addEventListener('pointerup',e=>{if(dragNode){if(dragNode.moved){saveState();}else{selectNode(dragNode.ip);}dragNode=null;}panStart=null;svg.classList.remove('panning');});
+svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect();const mx=e.clientX-r.left,my=e.clientY-r.top;const f=e.deltaY<0?1.12:0.89;const ns=Math.min(3,Math.max(.2,view.scale*f));const wx=(mx-view.tx)/view.scale,wy=(my-view.ty)/view.scale;view.tx=mx-wx*ns;view.ty=my-wy*ns;view.scale=ns;applyTransform();},{passive:false});
+function renderLinksAndNode(ip){ // light redraw: just re-render whole map (cheap enough)
+  renderMap();
+}
+function zoomBy(f){const r=svg.getBoundingClientRect();const mx=r.width/2,my=r.height/2;const ns=Math.min(3,Math.max(.2,view.scale*f));const wx=(mx-view.tx)/view.scale,wy=(my-view.ty)/view.scale;view.tx=mx-wx*ns;view.ty=my-wy*ns;view.scale=ns;applyTransform();}
+function fitView(){
+  if(!lastScan)return;const ps=Object.values(state.positions);if(!ps.length)return;
+  const xs=ps.map(p=>p.x),ys=ps.map(p=>p.y);const minX=Math.min(...xs)-80,maxX=Math.max(...xs)+80,minY=Math.min(...ys)-80,maxY=Math.max(...ys)+80;
+  const r=svg.getBoundingClientRect();const sx=r.width/(maxX-minX),sy=r.height/(maxY-minY);view.scale=Math.min(2,Math.max(.2,Math.min(sx,sy)));view.tx=-minX*view.scale+(r.width-(maxX-minX)*view.scale)/2;view.ty=-minY*view.scale+(r.height-(maxY-minY)*view.scale)/2;applyTransform();
 }
 
-function findHost(ip){ return lastScan ? lastScan.hosts.find(h=>h.ip===ip) : null; }
-
-function openDeviceDetail(ip){
-  const h = findHost(ip);
-  detailIp = ip;
-  $('#detailName').textContent = h ? hostLabel(h) : ip;
-  $('#detailIp').textContent = ip;
-  $('#dMac').textContent = h && h.mac ? h.mac : '—';
-  $('#dVendor').textContent = h && h.vendor ? h.vendor : '—';
-  $('#dType').textContent = h ? (h.isGateway?'Шлюз':h.isLocal?'Этот компьютер':'Хост') : '—';
-  $('#dStatus').innerHTML = '<span class="status online">Online</span>';
-  $('#dPortList').innerHTML = '<div style="color:var(--text-muted);font-size:13px">Нажмите «Сканировать порты».</div>';
-  $('#detailPanel').classList.add('open');
+/* context menu */
+function onNodeCtx(e){e.preventDefault();e.stopPropagation();const ip=e.currentTarget.getAttribute('data-ip');showCtx(e.clientX,e.clientY,ip);}
+function showCtx(x,y,ip){const m=$('#ctxMenu');const h=hostsByIp[ip];
+  m.innerHTML=[['Свойства',`selectNode('${ip}')`],['Сканировать порты',`ctxPorts('${ip}')`],['Открыть http://'+ip,`API.openExternal('http://${ip}')`],['sep',''],['Переименовать',`ctxRename('${ip}')`],['Центрировать',`centerIp('${ip}')`]]
+    .map(([t,a])=>t==='sep'?'<div class="sep"></div>':`<div onclick="hideCtx();${a}">${esc(t)}</div>`).join('');
+  m.style.left=Math.min(x,innerWidth-220)+'px';m.style.top=Math.min(y,innerHeight-240)+'px';m.style.display='block';
 }
-function closeDeviceDetail(){ $('#detailPanel').classList.remove('open'); }
+function hideCtx(){$('#ctxMenu').style.display='none';}
+document.addEventListener('click',hideCtx);
+function ctxPorts(ip){selectNode(ip);scanDrawerPorts();}
+function ctxRename(ip){const cur=state.labels[ip]||(hostsByIp[ip]?hostsByIp[ip].host:'')||'';const v=prompt('Имя устройства '+ip,cur);if(v!=null){state.labels[ip]=v.trim();saveState();renderMap();renderTable();}}
+function centerIp(ip){const p=state.positions[ip];if(!p)return;const r=svg.getBoundingClientRect();view.tx=r.width/2-p.x*view.scale;view.ty=r.height/2-p.y*view.scale;applyTransform();}
 
-async function scanDetailPorts(){
-  if(!API || !detailIp) return;
-  const btn = $('#dScanBtn'); btn.disabled=true; btn.textContent='Сканирую…';
-  const box = $('#dPortList'); box.innerHTML='<div style="color:var(--text-muted);font-size:13px">Сканирование портов…</div>';
-  try{
-    const res = await API.scanPorts({ target: detailIp, ports: '' });
-    if(!res.results.length){ box.innerHTML='<div style="color:var(--text-muted);font-size:13px">Открытых портов не найдено.</div>'; }
-    else box.innerHTML = res.results.map(p=>`<div class="port-item"><div><span class="port-num">${p.port}</span> / ${p.proto} · ${esc(p.service)}</div><span class="status open">Open</span></div>`).join('');
-    log(`Порты ${detailIp}: открыто ${res.results.length} из ${res.scanned}`, 'ok');
-  }catch(e){ box.innerHTML='<div style="color:var(--red);font-size:13px">Ошибка: '+esc(e.message)+'</div>'; }
-  finally{ btn.disabled=false; btn.textContent='Сканировать порты'; }
+/* ---------- drawer ---------- */
+function selectNode(ip){const h=hostsByIp[ip];if(!h)return;drawerIp=ip;selIp=ip;
+  $('#dName').textContent=nodeName(h);$('#dIp').textContent=ip;$('#dMac').textContent=h.mac||'—';$('#dVendor').textContent=h.vendor||'—';
+  $('#dStat').innerHTML=statusBadge(ip);const m=monData[ip];$('#dRtt').textContent=m&&m.rtt!=null?Math.round(m.rtt)+' мс':'—';
+  $('#dType').value=h.type||'unknown';
+  const ports=(h.sigPorts||[]);$('#dPorts').innerHTML=ports.length?ports.map(p=>`<div class="port-item"><span class="mono">${p}</span><span class="status open">Open</span></div>`).join(''):'<div style="color:var(--text-muted);font-size:13px">Нажмите «Сканировать порты».</div>';
+  sparkline('#dSpark',(m?m.hist:[]).map(v=>v<0?0:v),'#22d3ee');
+  $('#drawer').classList.add('open');
+}
+function closeDrawer(){$('#drawer').classList.remove('open');drawerIp=null;}
+function setNodeType(){if(!drawerIp)return;const t=$('#dType').value;state.typeOverride[drawerIp]=t;if(hostsByIp[drawerIp])hostsByIp[drawerIp].type=t;saveState();renderMap();renderTable();}
+function openHttp(){if(drawerIp&&API)API.openExternal('http://'+drawerIp);}
+function centerOnNode(){if(drawerIp){goView('map');setTimeout(()=>centerIp(drawerIp),60);}}
+async function scanDrawerPorts(){
+  if(!API||!drawerIp)return;const btn=$('#dScan');btn.disabled=true;btn.textContent='Сканирую…';
+  const box=$('#dPorts');box.innerHTML='<div style="color:var(--text-muted);font-size:13px">Сканирование…</div>';
+  try{const res=await API.scanPorts({target:drawerIp,ports:''});
+    box.innerHTML=res.results.length?res.results.map(p=>`<div class="port-item"><span><span class="mono">${p.port}</span> · ${esc(p.service)}</span><span class="status open">Open</span></div>`).join(''):'<div style="color:var(--text-muted);font-size:13px">Открытых портов не найдено.</div>';
+    if(hostsByIp[drawerIp])hostsByIp[drawerIp].sigPorts=res.results.map(r=>r.port);
+    log('Порты '+drawerIp+': '+res.results.length+' открыто','ok');
+  }catch(e){box.innerHTML='<div style="color:var(--red);font-size:13px">Ошибка: '+esc(e.message)+'</div>';}
+  finally{btn.disabled=false;btn.textContent='Сканировать порты';}
 }
 
-function quickPorts(ip){ goView('ports'); $('#portTarget').value = ip; startPortScan(); }
-
+/* ---------- port scanner view ---------- */
 async function startPortScan(){
-  if(!API){ $('#browserBanner').style.display='block'; goView('dashboard'); return; }
-  const btn = $('#portBtn'); const prog = $('#portProgress'); const bar = $('#portBar'); const st = $('#portStatus');
-  const target = $('#portTarget').value.trim();
-  if(!target){ st.textContent='укажите цель'; prog.style.display='block'; return; }
-  btn.disabled=true; prog.style.display='block'; bar.style.width='0%'; st.textContent='запуск…';
-  const tb = $('#portResults'); tb.innerHTML='<tr><td colspan="4" class="empty">Сканирование…</td></tr>';
-  log('Старт сканирования портов '+target);
-  const off = API.onProgress(p=>{ if(p.phase!=='ports') return; const pct=Math.max(1,Math.round(p.done/p.total*100)); bar.style.width=pct+'%'; st.textContent=pct+'%'; });
-  try{
-    const res = await API.scanPorts({ target, ports: $('#portRange').value });
-    st.textContent = `готово · ${res.results.length} открыто`; bar.style.width='100%';
-    $('#portCount').textContent = `${res.results.length} открыто / ${res.scanned} проверено`;
-    tb.innerHTML='';
-    if(!res.results.length){ tb.innerHTML='<tr><td colspan="4" class="empty">Открытых портов не найдено</td></tr>'; }
-    else for(const r of res.results){
-      const warn = (r.port===23||r.port===21||r.port===2323) ? 'warning' : 'open';
-      tb.insertAdjacentHTML('beforeend', `<tr><td class="mono">${r.port}</td><td>${r.proto}</td><td>${esc(r.service)}</td><td><span class="status ${warn}">Open</span></td></tr>`);
-    }
-    log(`Порты ${target}: открыто ${res.results.length} из ${res.scanned}`, 'ok');
-  }catch(e){ st.textContent='ошибка'; tb.innerHTML='<tr><td colspan="4" class="empty">Ошибка: '+esc(e.message)+'</td></tr>'; log('Ошибка скана портов: '+e.message,'err'); }
-  finally{ if(off) off(); btn.disabled=false; }
+  if(!API){$('#browserBanner').style.display='block';goView('dashboard');return;}
+  const btn=$('#portBtn'),prog=$('#portProgress'),bar=$('#portBar'),stt=$('#portStatus');
+  const target=$('#portTarget').value.trim();if(!target){stt.textContent='укажите цель';prog.style.display='block';return;}
+  btn.disabled=true;prog.style.display='block';bar.style.width='0%';stt.textContent='запуск…';
+  const tb=$('#portResults');tb.innerHTML='<tr><td colspan="4" class="empty">Сканирование…</td></tr>';
+  const off=API.onProgress(p=>{if(p.phase!=='ports')return;const pct=Math.max(1,Math.round(p.done/p.total*100));bar.style.width=pct+'%';stt.textContent=pct+'%';});
+  try{const res=await API.scanPorts({target,ports:$('#portRange').value});
+    stt.textContent='готово · '+res.results.length;bar.style.width='100%';$('#portCount').textContent=res.results.length+' открыто / '+res.scanned+' проверено';
+    tb.innerHTML=res.results.length?res.results.map(r=>{const w=[23,21,2323].includes(r.port)?'warning':'open';return `<tr><td class="mono">${r.port}</td><td>${r.proto}</td><td>${esc(r.service)}</td><td><span class="status ${w}">Open</span></td></tr>`;}).join(''):'<tr><td colspan="4" class="empty">Открытых портов не найдено</td></tr>';
+    log('Порты '+target+': '+res.results.length+' открыто','ok');
+  }catch(e){stt.textContent='ошибка';tb.innerHTML='<tr><td colspan="4" class="empty">Ошибка: '+esc(e.message)+'</td></tr>';}
+  finally{if(off)off();btn.disabled=false;}
 }
 
-initLocal();
+/* ---------- export ---------- */
+async function exportData(fmt){if(!API||!lastScan){log('Нет данных для экспорта','err');return;}const r=await API.exportData({format:fmt,hosts:lastScan.hosts});if(r&&r.ok)log('Экспортировано: '+r.path,'ok');}
+
+init();
 </script>
 </body>
 </html>
