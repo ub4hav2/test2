@@ -1,0 +1,63 @@
+{
+  "name": "nexusos",
+  "version": "2.4.1",
+  "description": "NexusOS Enterprise Network Platform",
+  "main": "main.js",
+  "author": {
+    "name": "NexusOS",
+    "email": "support@nexusos.app"
+  },
+  "license": "Commercial",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64"
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.nexusos.enterprise",
+    "productName": "NexusOS",
+    "copyright": "Copyright © 2026 NexusOS. All rights reserved.",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "index.html",
+      "main.js",
+      "preload.js",
+      "icon.ico",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": "x64"
+        }
+      ],
+      "icon": "icon.ico",
+      "publisherName": "NexusOS",
+      "legalTrademarks": "NexusOS"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": true,
+      "shortcutName": "NexusOS",
+      "license": "LICENSE.txt",
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "installerHeaderIcon": "icon.ico",
+      "uninstallDisplayName": "NexusOS ${version}",
+      "artifactName": "NexusOS-Setup-${version}.exe"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+name: Build NexusOS Installer
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build installer
+        run: npm run dist
+
+      - name: List dist
+        run: dir dist
+        shell: cmd
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.4.1
+          name: NexusOS 2.4.1
+          body: |
+            NexusOS Enterprise — сетевой сканер.
+            Файл установщика: NexusOS-Setup-2.4.1.exe (скачайте и запустите).
+          files: dist/NexusOS-Setup-*.exe
+          fail_on_unmatched_files: true
