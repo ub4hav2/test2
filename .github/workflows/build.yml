@@ -21,22 +21,37 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        shell: bash
+        run: npm install --no-audit --no-fund 2>&1 | tee -a build-output.txt
 
       - name: Build installer
-        run: npm run dist
-
-      - name: List dist
-        run: dir dist
-        shell: cmd
+        id: build
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run dist 2>&1 | tee -a build-output.txt
 
       - name: Publish release
+        if: success()
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v2.4.1
           name: NexusOS 2.4.1
           body: |
             NexusOS Enterprise — сетевой сканер.
-            Файл установщика: NexusOS-Setup-2.4.1.exe (скачайте и запустите).
+            Установщик: NexusOS-Setup-2.4.1.exe — скачайте и запустите.
           files: dist/NexusOS-Setup-*.exe
           fail_on_unmatched_files: true
+
+      - name: Capture diagnostics on failure
+        if: failure()
+        shell: bash
+        run: |
+          git config user.email "ci@local"
+          git config user.name "ci"
+          git checkout --orphan diag
+          git rm -rf --cached . >/dev/null 2>&1 || true
+          cp build-output.txt diag-build-output.txt || echo "no output file" > diag-build-output.txt
+          git add -f diag-build-output.txt
+          git commit -m "diag $(date)" >/dev/null 2>&1 || true
+          git push -f origin diag
