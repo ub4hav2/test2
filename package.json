@@ -10,7 +10,7 @@
   "license": "Commercial",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win --x64"
+    "dist": "electron-builder --win --x64 --publish never"
   },
   "devDependencies": {
     "electron": "^28.3.3",
